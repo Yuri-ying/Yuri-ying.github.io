@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Flappy Bird</title>
+	<style type="text/css">
+		#div0{
+			position: absolute;
+			z-index: -1;
+			left: 240px;
+			width: 800px;
+			height: 604px;
+			overflow: hidden;
+		}
+		#SG{
+			position: absolute;
+			top: 350px;
+			left: 320px; 
+		}
+		#Ins{
+			position: absolute;
+			top: 350px;
+			left: 390px;
+		}
+		#title{
+			position: absolute;
+			top: 200px;
+			left: 250px;
+			width: 300px;
+			height: 80px;
+		}
+		#div1{
+			text-align: center;
+			width: 270px;
+			height: 200px;
+			position: absolute;
+			top: 390px;
+			left: 270px;
+			background-image: url(board.png);
+			visibility: hidden;
+		}
+		#ins{
+			position: absolute;
+			top: 35px;
+			left: 55px;
+			width: 150px;
+			height: 200px;
+		}
+		#div2{
+			position: absolute;
+			top: 15px;
+			right:10px;
+			width: 80px;
+		    height: 30px; 
+		    visibility: hidden;
+		    overflow: hidden;
+		}
+		#div4{
+			width: 800px;
+			height: 604px;
+			position: absolute;
+			top: 0;
+			visibility: hidden;
+		}
+		#Bird{
+			position: absolute;
+			top: 300px;
+			left: 250px;
+		}
+		#div5{
+			width: 800px;
+			height: 604px;
+			position: absolute;
+			top: 0;
+			visibility: hidden;
+		}
+		#go{
+			position: absolute;
+			top: 270px;
+			left: 270px;
+			width: 300px;
+			height: 80px;
+		}
+		#restart{
+			position: absolute;
+			top: 370px;
+			left: 370px;			
+		}
+		#bigpause{
+			position: absolute;
+			top: 240px;
+			left: 350px;
+			width: 150px;
+			height: 150px;
+			visibility: hidden;
+		}
+		#corn1{
+			background-image: url(corn1.png);
+			position: absolute;
+			right: -60px;
+			width: 43px;
+			height: 42px;
+		}
+		#uppipe{
+			width: 52px;
+			position: absolute;
+			height: 235px;
+			background-image: url(uppipe.png);
+			top: 0;
+			right: -50px;
+		}
+		#downpipe{
+			width: 52px;
+			position: absolute;
+			background-image: url(downpipe.png);
+			bottom: 3px;
+			right: -50px;
+		}
+		#score{
+			position: absolute;
+			top:2px;
+			left: 63px;
+		}
+		#score1{
+			position: absolute;
+			top: 45px;
+			left: 120px;
+			font-size: 30px;
+		}
+	</style>
+</head>
+<body>
+	<div id="div0">   
+		<div>
+			<img src="background.png" id="BG">
+		</div>
+		<div id="div3">  <!-- 游戏初始界面 -->
+			<div>
+			<img src="title.png" id="title">
+		    </div>
+		    <div>
+			    <button id="SG" onclick="startGame()">Start</button>     <!--游戏开始按钮 -->
+			    <button id="Ins" onclick="instruction()">How to Play</button>    <!--游戏说明按钮 -->
+		    </div>
+		    <div id="div1"><p id="ins"></p></div>
+		</div>
+		<div id="div4" onclick="fly()">  <!-- 游戏进行界面 -->
+			<div>
+		    		<div id="corn1"></div>    <!-- 定义上下管道和硬币-->
+		    	    <div id="uppipe"></div>
+		    	    <div id="downpipe"></div>
+		    	</div>	 
+			<div id="div2">  <!-- 定义暂停和继续 -->
+			    <img src="pause.png" style="margin-right: 10px;" onclick="pause()">
+			    <img src="resume.png" onclick="resume()">
+		    </div>
+		    <div>
+		    	<img src="bigpause.png" id="bigpause">
+
+		    </div>
+		    <div><img src="bird1.png" id="Bird"></div>
+		    <div><img id="bomb"></div>
+		    <div>
+		    	<p style="font-size: 25px;position: absolute;left: 20px;top: -15px;">score:<span id="score">0</span></p>
+		    	 	
+		    </div>
+		    <div id="div5">  <!--游戏结束界面 -->
+	    	    <img src="GAMEOVER.png" id="go">
+	    	    <img src="play.png" id="restart" onclick="restart()">
+	    	    <img src="board.png" style="position: absolute;top: 50px;left:290px;width: 270px;height: 200px;">
+	    	    <p style="text-align: center;position: absolute;top: 75px;left:290px;font-size:25px;width: 270px;height: 200px">score:<br><br><span id="score1"></span></p>
+	        </div>	
+	    </div>
+	</div>
+	<script type="text/javascript" url="CB.js"></script>
+	<script type="text/javascript">
+		var g=0.98,y=2,x=3;   //定义鸟在x轴和y轴每单位时间增加的距离和加速度
+		var b_x=250,b_y=300;   //定义鸟的初始位置
+		var p_x=-60,c_x=-80;   //定义管道和硬币的初始位置
+		var score=0,p=0,v=0,o=0,r=0,h=0;    //定义初始分数和控制循环的数值
+		var upp=document.getElementById("uppipe");
+		var dop=document.getElementById("downpipe");
+		function instruction(){   //游戏说明
+			var a=document.getElementById("div1");
+			var text="鼠标点击界面控制小鸟向上飞，注意不要碰到障碍！"
+			document.getElementById('ins').innerHTML=text;
+            a.style.visibility="visible";  
+		}
+		var b=document.getElementById('div3');
+		var c=document.getElementById('div1');
+		var d=document.getElementById('div2');
+		var e=document.getElementById('div4');
+		var f=document.getElementById("div5");
+		function startGame(){	//初始界面的内容全部隐藏，出现游戏内容界面和游戏主体的函数
+			b.style.visibility="hidden";
+			c.style.visibility="hidden";
+			d.style.visibility="visible";
+			e.style.visibility="visible";
+			if(h==0){
+			   Game();
+			} else{
+				CB();
+			} 
+		}
+		function fly(){   //鼠标点击时鸟向上15px
+			y=-15;
+		}
+		var flyTimer=null;     //将计时器定义为全局变量
+        var pipeTimer=null;
+        var cornTimer=null;
+		function Game(){
+			var fly=function(){   //鸟碰到上下边界就gameover
+				if (b_y>=560) {
+		     		b_y=560;
+		     		gameover();
+		     	}
+		     	if (b_y<=-5) {
+		     		b_y=-5;
+		     		gameover();
+		     	}
+		     	if (((b_y<=(235+uppipe.offsetTop))&&(b_x>=(692-p_x))&&((b_x+56)<=(856-p_x)))
+		     	||((b_x>=(692-p_x))&&((b_x+56)<=(856-p_x))&&((b_y+45)>=downpipe.offsetTop))){  //碰撞范围：鸟的右边和管道左边相碰开始到管道右边和鸟的左边相碰的距离为y轴的碰撞范围；鸟的top值b_y小于等于上管道的高度即鸟的位置高于管道底部或者总高度减去鸟的高度减去鸟的top值即鸟和底部的距离小于等于总高度减去下管道和顶部的垂直距离即管道高度的时候视为碰撞
+		     		gameover();
+		     	}
+                b_y+=y;   //两个式子模拟有加速度的下坠
+                y+=g;     
+                b_x+=x;   //鸟从初始位置向右匀速移动
+		     	if (y>=6) {  //控制鸟下坠速度不至于太快
+		     		y=6;
+		     	}
+		     	if (b_x>=300) {   //将鸟的left定为300px避免向右飞出界面
+		     		b_x=300;
+		     	} 
+		     	Bird.style.top=b_y+"px";
+		     	Bird.style.left=b_x+"px";   //设置鸟的位置
+			}
+			flyTimer=window.setInterval(fly,20);   //计时器控制鸟的飞行
+			var pipe=function(){
+				if (p==0) {
+					uppipe.style.top=0-Math.random()*150+"px";
+				    downpipe.style.height=50+Math.random()*250+"px";    //随机生成上下管道的高度和top值
+				    p=1;     //
+				}
+			    if (p_x>=800) {
+			    	p_x=-60;  
+			    	  //往左移出画面后回到起点
+			    	v=0;        
+			    	p=0;        //使循环可以继续
+			    }
+			    if (p_x>=500&&v==0) {
+			    	score++;    //过一个管道得一分
+			    	v=1;        //不会反复计分
+			    	document.getElementById("score").innerHTML=score;   
+			    }
+				p_x+=15;    //管道往左每个时间单位移动15
+				uppipe.style.right=p_x+"px";
+				downpipe.style.right=p_x+"px";
+			}
+			pipeTimer=window.setInterval(pipe,15);  //用计时器让管道反复生成
+			var corn=function(){
+				if (o==0) {
+					corn1.style.top=150+Math.random()*200+"px";   
+					o=1;   //随机生成硬币的top值改变其位置
+				}
+				if (c_x>=830) {   //向左移出界面后回到起点
+					c_x=-100;					
+					o=0;
+					v=0;
+					corn1.style.visibility="visible";		
+				}
+				if((c_x>=(702-b_x))&&((c_x+42)<=(842-b_x))&&((b_y-42)<=corn1.offsetTop)&&v==0&&(42+corn1.offsetTop)<=(b_y+87)){  //硬币左边碰到鸟右边开始到鸟左边碰到硬币右边的范围是x轴碰撞范围；鸟在left=300px时上下飞；总高度减去鸟的top值b_y减去鸟的高度56（有空白约15px）小于等于硬币和底部的垂直距离加上硬币的高度（即飞的比硬币低）或者鸟的top值b_y小于硬币和顶部垂直（即飞的比硬币高）时碰撞
+					score+=5;
+					document.getElementById("score").innerHTML=score;   //碰到硬币加5分
+					corn1.style.visibility="hidden"; //碰到的硬币消失					
+					v=1;   //使循环再开始
+				}
+			    c_x+=15;  //硬币往左每个时间单位移动15
+			    corn1.style.right=c_x+"px";   //			  
+		    }
+		    cornTimer=window.setInterval(corn,20);   //计时器反复生成硬币
+		}
+		function pause(){      //按暂停按钮让三个计时器都停止，显示暂停图标
+			clearInterval(flyTimer);
+		    clearInterval(pipeTimer);
+		    clearInterval(cornTimer);
+		    bigpause.style.visibility="visible";   
+		}
+		function resume(){     //隐藏暂停图标，继续game函数
+			bigpause.style.visibility="hidden";
+			Game();   
+		}		
+		function gameover(){    //三个计时器停止，出现GAMEOVER字样、分数界面和再试一次
+		    clearInterval(flyTimer);
+		    clearInterval(pipeTimer);
+		    clearInterval(cornTimer);
+		    f.style.visibility="visible";
+		    document.getElementById("score1").innerHTML=score;
+		}
+		function restart(){    //隐藏结束界面的内容，把所有数值设为初始值，重新开始startgame函数
+			f.style.visibility="hidden";
+			b_x=250;
+			b_y=300;
+			p_x=-60;
+			c_x=-100;
+			score=0;p=0;v=0,o=0;
+			document.getElementById("score").innerHTML=0;
+			Game();
+		}			
+	</script>
+</body>
+</html>
